@@ -28,7 +28,7 @@ export default {
     this.$nextTick(() => {
       this.borderEffect();
       setTimeout(() => {
-        //this.$router.push({ path: "/projects", replace: true });
+        this.$router.push({ path: "/projects", replace: true });
       }, 2000);
     });
   },
