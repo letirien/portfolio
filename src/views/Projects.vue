@@ -119,9 +119,10 @@ export default {
     this.callUnderline();
     const wrap = document.querySelector('.normalWrap')
     const parentGrid = document.querySelector('.parent_card_grid')
-    parentGrid.style.marginLeft = wrap.offsetLeft + 24 + 'px'
+    const padding = parseInt(window.getComputedStyle(wrap, null).getPropertyValue('padding-left'))
+    parentGrid.style.marginLeft = (wrap.offsetLeft + padding) + 'px'
     window.addEventListener('resize', () => {
-      parentGrid.style.marginLeft = wrap.offsetLeft + 24 + 'px'
+      parentGrid.style.marginLeft = (wrap.offsetLeft + padding)  + 'px'
     });
 
   },
@@ -210,6 +211,7 @@ export default {
   }
     /* … */
   .card_grid {
+    padding-top: 0px !important;
     grid-auto-columns: auto !important;
     grid-column-gap: 48px !important;
     scroll-snap-type: x mandatory;

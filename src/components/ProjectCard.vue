@@ -45,7 +45,9 @@ export default {
 <style scoped lang="scss">
 @media (max-width: 768px) {
   .card {
-    width: calc(100vw - 48px);
+    height: fit-content;
+    padding: 16px!important;
+    width: calc(100vw - 36px);
   }
   .cardBody {
     .container-img {

@@ -123,3 +123,9 @@ p{
     transition: height 0.5s;
   }
 }
+
+@media (max-width: 768px) {
+  .wrap, .normalWrap{
+    padding: 16px;
+  }
+}

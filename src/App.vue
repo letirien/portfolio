@@ -1,5 +1,4 @@
 <template>
-  <div class="body">
     <div :class="$route.path !== '/projects'?  'wrap' : ''">
       <router-view v-slot="{ Component }">
         <transition name="component-fade" mode="out-in" appear>
@@ -7,7 +6,6 @@
         </transition>
       </router-view>
     </div>
-  </div>
 </template>
 <script>
 export default {};
