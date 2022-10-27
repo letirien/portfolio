@@ -1,6 +1,6 @@
 <template>
   <div class="body">
-    <div class="wrap">
+    <div :class="$route.path !== '/projects'?  'wrap' : ''">
       <router-view v-slot="{ Component }">
         <transition name="component-fade" mode="out-in" appear>
           <component :is="Component" />
@@ -9,14 +9,13 @@
     </div>
   </div>
 </template>
-
 <script>
 export default {};
 </script>
 <style lang="scss">
 @import "src/assets/styles/styles.scss";
 @import url("https://fonts.googleapis.com/css2?family=Libre+Baskerville&display=swap");
-
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Kosugi&display=swap');
 .component-fade-enter-active,
 .component-fade-leave-active {
   transition: opacity 0.5s ease;

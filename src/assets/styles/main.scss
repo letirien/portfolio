@@ -1,8 +1,42 @@
-.body {
+h1, h2, h3, .cta , .project_link, .intro{
   font-family: "Libre Baskerville", serif;
-  background: #eeebd3;
-  height: 100%;
 }
+body{
+  padding-top: 24px;
+  background: #eeebd3;
+  min-height: 100vh;
+  position: relative;
+}
+
+p, .tags{
+  font-family: 'Kosugi', sans-serif;
+}
+.tags{
+  font-size: 13px;
+  font-weight: bold;
+}
+.link > a{
+  font-family: 'Libre Baskerville';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 12px;
+
+}
+a{
+  text-decoration: none;
+  color: black;
+}
+.project_link{
+  font-size: 16px;
+}
+p{
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+}
+
 .top-24 {
   margin-top: 24px;
 }
@@ -12,12 +46,18 @@
 .wrap {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 24px;
+  padding: 0 24px;
   overflow-x: hidden;
   min-height: 100vh;
 }
+.normalWrap{
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  overflow-x: hidden;
+}
 .title,
-.intro {
+.intro,.project_link {
   position: relative;
   display: inline;
 

@@ -1,177 +1,189 @@
 <template>
   <div>
-    <h1 ref="underline" class="title">Projects</h1>
-    <div class="flex">
-      <img class="building" src="../assets/work-in-progress.png" alt="" />
+    <div class="normalWrap">
+      <h1 ref="underline" class="title">Projects</h1>
     </div>
-    <div class="top-24">
-      <h2>Voir quelque uns de mes projets :</h2>
-      <ul>
-        <li :key="index" v-for="(project, index) in projects">
-          <a :href="project.link" target="_blank">{{ project.Name }}</a>
-          <ol :v-if="project.description">
-            {{
-              project.description
-            }}
-          </ol>
-          <ol :v-if="project.Image">
-            <a
-              :href="Img.url"
-              :key="Img"
-              v-for="Img in project.Image"
-              target="_blank"
-            >
-              {{ Img.name }} /&nbsp
-            </a>
-          </ol>
-        </li>
-      </ul>
-      <hr />
-      <h2 class="top-24">Bonus</h2>
-      <ul>
-        <li :key="index" v-for="(aussi, index) in also">
-          <a :href="aussi.link" target="_blank">{{ aussi.Name }}</a>
-          <ol :v-if="aussi.description">
-            {{
-              aussi.description
-            }}
-          </ol>
-        </li>
-      </ul>
+    <div class="top-24 parent_card_grid">
+      <div class="card_grid">
+        {{ focus }}
+        <ProjectCard :id="project.Name" class="kid" :focus='!isMobile? firstEl: ""' :key="index"
+                     v-for="(project, index) in projects" :content="project"/>
+      </div>
     </div>
+    <div class="normalWrap foot">
+      <div class="nav_projects" v-show="!isMobile">
+        <p @click="scroll($event)" class="h2 project_link" :id="'link'+project.Name" :class="project.Name==='Jiboiana'?'underline': ''"
+           v-for="(project, index) in clone ">{{ project.Name }}</p>
+      </div>
+      <div class="arrowParent" v-show="!isMobile">
+        <div class="stickmanWalking" v-if="this.slide"
+             :style="this.right? '': 'transform: translateX(-50%) rotateY(180deg); right: -78px'"><img
+            src="../assets/walking.gif" alt=""></div>
+        <div class="stickman" v-else :style="this.right? '': 'transform: translateX(-50%) rotateY(180deg);'"><img
+            src="../assets/notWalking.png" alt=""></div>
+        <svg @click="go('left')" class="arrow left" width="59" height="24" viewBox="0 0 59 24" fill="none"
+             xmlns="http://www.w3.org/2000/svg">
+          <path
+              d="M0.93934 10.9393C0.353553 11.5251 0.353553 12.4749 0.93934 13.0607L10.4853 22.6066C11.0711 23.1924 12.0208 23.1924 12.6066 22.6066C13.1924 22.0208 13.1924 21.0711 12.6066 20.4853L4.12132 12L12.6066 3.51471C13.1924 2.92893 13.1924 1.97918 12.6066 1.39339C12.0208 0.807608 11.0711 0.807608 10.4853 1.39339L0.93934 10.9393ZM59 10.5L2 10.5L2 13.5L59 13.5L59 10.5Z"
+              fill="black"/>
+        </svg>
+        <svg @click="go('right')" class="arrow right" width="59" height="24" viewBox="0 0 59 24" fill="none"
+             xmlns="http://www.w3.org/2000/svg">
+          <path
+              d="M58.0607 13.0607C58.6464 12.4749 58.6464 11.5251 58.0607 10.9393L48.5147 1.3934C47.9289 0.807616 46.9792 0.807616 46.3934 1.3934C45.8076 1.97919 45.8076 2.92894 46.3934 3.51472L54.8787 12L46.3934 20.4853C45.8076 21.0711 45.8076 22.0208 46.3934 22.6066C46.9792 23.1924 47.9289 23.1924 48.5147 22.6066L58.0607 13.0607ZM-1.31134e-07 13.5L57 13.5L57 10.5L1.31134e-07 10.5L-1.31134e-07 13.5Z"
+              fill="black"/>
+        </svg>
+
+      </div>
+    </div>
+    <svg class="slideHand" width="60" height="60" viewBox="0 0 437 306" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="203" y="43" width="13" height="151" fill="black"/>
+      <rect x="241" y="42" width="13" height="151" fill="black"/>
+      <rect x="353" y="143" width="13" height="88" fill="black"/>
+      <rect x="341" y="231" width="13" height="38" fill="black"/>
+      <rect x="328" y="268" width="13" height="38" fill="black"/>
+      <rect x="316" y="131" width="13" height="38" fill="black"/>
+      <rect x="278" y="118" width="13" height="38" fill="black"/>
+      <rect x="216" y="268" width="13" height="38" fill="black"/>
+      <rect x="203" y="243" width="13" height="25" fill="black"/>
+      <rect x="191" y="217" width="13" height="26" fill="black"/>
+      <rect x="178" y="193" width="13" height="25" fill="black"/>
+      <rect x="153" y="156" width="13" height="25" fill="black"/>
+      <rect x="216" y="30" width="25" height="13" fill="black"/>
+      <rect x="254" y="93" width="25" height="13" fill="black"/>
+      <rect x="316" y="118" width="25" height="13" fill="black"/>
+      <rect x="341" y="130" width="13" height="13" fill="black"/>
+      <rect x="190" y="156" width="13" height="13" fill="black"/>
+      <rect x="166" y="180" width="13" height="13" fill="black"/>
+      <rect x="278" y="105" width="38" height="13" fill="black"/>
+      <rect x="153" y="143" width="38" height="13" fill="black"/>
+      <rect x="229" y="293" width="99" height="13" fill="black"/>
+      <path d="M435.828 32.8284C437.391 31.2663 437.391 28.7337 435.828 27.1716L410.373 1.71573C408.81 0.153632 406.278 0.153632 404.716 1.71573C403.154 3.27783 403.154 5.81049 404.716 7.37258L427.343 30L404.716 52.6274C403.154 54.1895 403.154 56.7222 404.716 58.2843C406.278 59.8464 408.81 59.8464 410.373 58.2843L435.828 32.8284ZM291 34H433V26H291V34Z" fill="black"/>
+      <path d="M1.17157 27.1716C-0.390524 28.7337 -0.390524 31.2663 1.17157 32.8284L26.6274 58.2843C28.1895 59.8464 30.7222 59.8464 32.2843 58.2843C33.8464 56.7222 33.8464 54.1895 32.2843 52.6274L9.65685 30L32.2843 7.37257C33.8464 5.81048 33.8464 3.27782 32.2843 1.71572C30.7222 0.153621 28.1895 0.153621 26.6274 1.71572L1.17157 27.1716ZM153 26L4 26L4 34L153 34L153 26Z" fill="black"/>
+    </svg>
+
   </div>
 </template>
-
 <script>
-import { onMounted, ref } from "vue";
+import {ref} from "vue";
+import ProjectCard from "../components/ProjectCard.vue";
+
 export default {
   name: "Projects",
+  components: {ProjectCard},
   setup() {
     // make users variable reactive with the ref() function
-    const projects = ref([
-      { Name: "Jiboiana", link: "https://association-jiboiana.com/" },
-      { Name: "WowNews Website", link: "https://www.wow-news.eu/" },
-      { Name: "WowNews App", link: "https://app.wow-news.eu/" },
-      {
-        Name: "Plugins Figma",
-        Image: [
-          {
-            id: "attF72OysDsPJcukP",
-            name: "insertion d'avatar",
-            width: 588,
-            height: 644,
-            url: "https://dl.airtable.com/.attachments/022ebe8d05c2010da644c6b3d2ef643c/5424414f/image.png",
-            filename: "image.png",
-            size: 17931,
-            type: "image/png",
-            thumbnails: {
-              small: {
-                url: "https://dl.airtable.com/.attachmentThumbnails/26febf3d9e534b4ab52b7b304b15a0f3/de68190c",
-                width: 33,
-                height: 36,
-              },
-              large: {
-                url: "https://dl.airtable.com/.attachmentThumbnails/6d43c643e8ee0ab0f04b1da733a394c1/59cd9603",
-                width: 512,
-                height: 561,
-              },
-              full: {
-                url: "https://dl.airtable.com/.attachmentThumbnails/7efa850296e82a5bc3bb7f664b1e675f/c9dfb19e",
-                width: 3000,
-                height: 3000,
-              },
-            },
-          },
-          {
-            id: "attAx8GJnnju7eTkW",
-            name: "insertion d'avatar 2",
-            width: 597,
-            height: 664,
-            url: "https://dl.airtable.com/.attachments/72d0ee90c5d89baf5b6cd463ef3479c5/93761fad/image.png",
-            filename: "image.png",
-            size: 34991,
-            type: "image/png",
-            thumbnails: {
-              small: {
-                url: "https://dl.airtable.com/.attachmentThumbnails/98e5769686f58be01271aa3c78257561/137e8b83",
-                width: 32,
-                height: 36,
-              },
-              large: {
-                url: "https://dl.airtable.com/.attachmentThumbnails/6dd9a732b9d6aadcb59eaa950f12a190/6b23c435",
-                width: 512,
-                height: 569,
-              },
-              full: {
-                url: "https://dl.airtable.com/.attachmentThumbnails/029e86953ba70de3e77be4e143c5eb61/ad05b60e",
-                width: 3000,
-                height: 3000,
-              },
-            },
-          },
-          {
-            id: "attiGQjDFvf1W9LTV",
-            name: "Frame into Mockup",
-            width: 726,
-            height: 507,
-            url: "https://dl.airtable.com/.attachments/89d229b2097dafb8ece2f6aee7ef9087/b9db5ab4/image.png",
-            filename: "image.png",
-            size: 206250,
-            type: "image/png",
-            thumbnails: {
-              small: {
-                url: "https://dl.airtable.com/.attachmentThumbnails/e431f64d8597a6d28a40862bb7375e97/a9353fcc",
-                width: 52,
-                height: 36,
-              },
-              large: {
-                url: "https://dl.airtable.com/.attachmentThumbnails/f0cb7ee990ee8a2e78b73c7f650fa3f4/5eb9dcb7",
-                width: 726,
-                height: 507,
-              },
-              full: {
-                url: "https://dl.airtable.com/.attachmentThumbnails/51d64bf27706aeafca0e6e3fedb389ef/0be6a894",
-                width: 3000,
-                height: 3000,
-              },
-            },
-          },
-        ],
+    const projects = ref([]);
+    const clone = ref([])
+    const firstEl = ref('');
+    const clickCount = ref(0)
+    let right = ref(true)
+    let current = ref(0)
+    let old = ref(null)
+    const slide = ref(false);
+
+    fetch("https://api.airtable.com/v0/appTE72qZSTNVsNrL/projects?maxRecords=100&view=Grid%20view", {
+      headers: {
+        'Content-type': 'application/json',
+        'Authorization': `Bearer key9a1KxVxfytXi0P`, // notice the Bearer before your token
       },
-    ]);
-    const also = ref([
-      {
-        link: "https://rentli.fr/",
-        Name: "Rentli",
-        description:
-          "Refonte graphique du site / couleurs / assets / nouvelle page etc",
-      },
-      {
-        link: "https://www.bootnow.co/",
-        Name: "Bootnow - Ancienne Alternance",
-      },
-      {
-        link: "https://sprint.studio-uni.fr/",
-        Name: "Test d'entrée pour ma première alternance",
-      },
-    ]);
+
+    })
+        .then((response) => response.json())
+        .then((data) => {
+          firstEl.value = data.records[0].fields.Name
+          data.records.map(e => {
+            projects.value.push(e.fields)
+            clone.value.push(e.fields)
+
+          })
+        })
 
     return {
       projects,
-      also,
-    };
+      firstEl,
+      clone,
+      right,
+      current,
+      old,
+      slide,
+      clickCount,
+    }
+  },
+  computed: {
+    isMobile() {
+      return window.matchMedia('only screen and (max-width: 768px)').matches;
+    }
   },
   mounted() {
     this.callUnderline();
-  },
-  created() {
-    console.log("Icon made by Pixel perfect from www.flaticon.com");
-    this.$nextTick(() => {
-      //this.borderEffect();
+    const wrap = document.querySelector('.normalWrap')
+    const parentGrid = document.querySelector('.parent_card_grid')
+    parentGrid.style.marginLeft = wrap.offsetLeft + 24 + 'px'
+    window.addEventListener('resize', () => {
+      parentGrid.style.marginLeft = wrap.offsetLeft + 24 + 'px'
     });
-  },
 
+  },
   methods: {
+    walk() {
+      this.slide = true
+    },
+    stop() {
+      this.slide = false
+    },
+    changeDirection(elClicked) {
+      let indexOfClicked = this.projects.indexOf(this.projects.find(el => el.Name === elClicked))
+      if (this.current === null) {
+        this.current = indexOfClicked
+      } else {
+        this.old = this.current
+        this.current = indexOfClicked
+      }
+
+      if (this.old < this.current) {
+        this.right = true
+      } else {
+        this.right = false
+      }
+
+    },
+    go(direction) {
+        if (direction === 'right') {
+          if (this.clickCount < this.projects.length -1) {
+            this.clickCount += 1
+          }
+        } else {
+          if (this.clickCount > 0) {
+            this.clickCount -= 1
+          }
+        }
+        const elInArray = this.projects[this.clickCount].Name
+        const elToClick = document.getElementById('link'+elInArray)
+        elToClick.click()
+    },
+    scroll(e) {
+      if (!this.isMobile) {
+        this.walk()
+        setTimeout(this.stop, 200)
+        let view = document.getElementById(e.target.textContent)
+        this.firstEl = view.id
+        const parent = document.querySelector('.card_grid')
+        const card = document.querySelectorAll('.card')
+        let scrollNeeded = view.offsetLeft - parent.offsetLeft
+        card.forEach((el) => {
+          el.style.transform = "translateX(-" + scrollNeeded + "px)"
+        })
+        document.querySelectorAll('.project_link').forEach(el => {
+          if (el.getElementsByClassName('underline')) {
+            el.classList.remove('underline')
+          }
+          e.target.classList.add('underline')
+        })
+        this.changeDirection(e.target.textContent)
+      }
+
+    },
     callUnderline() {
       let line = this.$refs.underline;
 
@@ -182,33 +194,139 @@ export default {
       setTimeout(underline, 200);
     },
 
-    borderEffect() {
-      const main = document.querySelector(".main");
-      setTimeout(() => {
-        main.classList.add("border");
-      }, 400);
-    },
   },
 };
 </script>
 <style lang="scss" scoped>
-.building {
-  max-width: 100%;
-  margin: 0 auto;
-  transform-origin: top center; // same way can use two keywords
-  transform: rotate(-25deg);
-  animation: stickUpDown 3s ease-in-out 0s infinite alternate;
-}
-@keyframes stickUpDown {
-  from {
-    transform: rotate(-25deg);
+@media (max-width: 768px) {
+  .slideHand{
+    display: block!important;
+    position: absolute;
+    right: 24px;
+    bottom: 24px;
   }
-  to {
-    transform: rotate(25deg);
+  .foot {
+    display: none!important;
   }
+    /* … */
+  .card_grid {
+    grid-auto-columns: auto !important;
+    grid-column-gap: 48px !important;
+    scroll-snap-type: x mandatory;
+    -ms-scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    overflow-x: scroll !important;
+
+    .kid {
+      scroll-snap-align: start;
+    }
+
+  }
+
+  .card_grid::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  .card_grid::-webkit-scrollbar {
+    height: 6px;
+    background-color: transparent;
+  }
+
+  .card_grid::-webkit-scrollbar-thumb {
+    background-color: black;
+    position: relative;
+
+    &:after{
+      content: '>';
+      position: absolute;
+      width: 8px;
+      height: 6px;
+      background: red;
+    }
+  }
+
 }
-.project_grid {
-  height: 576px;
+.slideHand{
+  display: none;
+}
+.card_grid {
+  padding-top: 50px;
+  display: grid;
+  grid-auto-columns: 464px;
+  grid-column-gap: 160px;
+  grid-auto-flow: column;
+  scroll-snap-type: x mandatory;
+  -ms-scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+.foot {
+  align-items: flex-end;
+  height: 150px;
+  position: absolute;
+  bottom: 48px;
+  display: flex;
+  justify-content: space-between;
+  left: 50%;
+  transform: translateX(-50%);
   width: 100%;
+  overflow: hidden;
+
+  .arrowParent {
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+    .arrow {
+      width: 80px;
+      position: relative;
+      cursor: pointer;
+
+      &.left {
+        margin-right: 4px;
+      }
+
+      &.right {
+        margin-left: 4px;
+      }
+    }
+
+    .stickman {
+      width: 80px;
+      position: absolute;
+      top: 15px;
+      right: 24px;
+      transform: translateX(-50%);
+
+      img {
+        width: 100%;
+      }
+    }
+
+    .stickmanWalking {
+      height: 165px;
+      position: absolute;
+      top: -7px;
+      right: -107px;
+      transform: translateX(-50%);
+
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+
 }
+
+.nav_projects {
+  max-width: 65%;
+
+  .project_link {
+    cursor: pointer;
+    margin-right: 32px;
+  }
+}
+
+
 </style>

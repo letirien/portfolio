@@ -74,6 +74,9 @@ export default {
 }
 .intros {
   height: 576px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
 }
 .intro {
   font-size: 180px;
