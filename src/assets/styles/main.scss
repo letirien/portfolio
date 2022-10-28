@@ -57,7 +57,7 @@ p{
   overflow-x: hidden;
 }
 .title,
-.intro,.project_link {
+.project_link {
   position: relative;
   display: inline;
 
@@ -84,43 +84,11 @@ p{
   }
 }
 
-.intro:after {
-  height: 4px !important;
-}
-.main {
-  margin-top: 140px;
-}
 .flex {
   display: flex;
 
   &.justify-between {
     justify-content: space-between;
-  }
-}
-
-.main {
-  position: relative;
-  padding-left: 24px;
-
-  &:after {
-    position: absolute;
-    content: "";
-    width: 4px;
-    left: 0;
-    bottom: 0;
-    height: 0%;
-    background: black;
-    transition: height 0.5s;
-  }
-  &.border:after {
-    width: 4px;
-    position: absolute;
-    content: "";
-    left: 0;
-    bottom: 0;
-    height: 100%;
-    background: black;
-    transition: height 0.5s;
   }
 }
 

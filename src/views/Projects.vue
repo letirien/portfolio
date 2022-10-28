@@ -124,7 +124,10 @@ export default {
     window.addEventListener('resize', () => {
       parentGrid.style.marginLeft = (wrap.offsetLeft + padding)  + 'px'
     });
-
+  },
+  created() {
+    const container = window.document.querySelector('.container')
+    container.classList.contains("wrap") ? container.classList.remove('wrap'): ''
   },
   methods: {
     walk() {
@@ -150,6 +153,7 @@ export default {
 
     },
     go(direction) {
+      this.current ? this.clickCount = this.current: ''
         if (direction === 'right') {
           if (this.clickCount < this.projects.length -1) {
             this.clickCount += 1
@@ -204,7 +208,7 @@ export default {
     display: block!important;
     position: absolute;
     right: 24px;
-    bottom: 24px;
+    top: 24px;
   }
   .foot {
     display: none!important;

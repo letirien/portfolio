@@ -1,5 +1,5 @@
 <template>
-    <div :class="$route.path !== '/projects'?  'wrap' : ''">
+    <div class="wrap container">
       <router-view v-slot="{ Component }">
         <transition name="component-fade" mode="out-in" appear>
           <component :is="Component" />

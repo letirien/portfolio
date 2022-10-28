@@ -52,71 +52,40 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-@media screen and (max-width: 1024px) {
-  .intro {
-    font-size: 164px !important;
-  }
-}
-@media screen and (max-width: 768px) {
-  .intro {
-    font-size: 86px !important;
-  }
-}
-@media screen and (max-width: 512px) {
-  .intro {
-    font-size: 64px !important;
-  }
-}
-@media screen and (max-width: 375px) {
-  .intro {
-    font-size: 48px !important;
-  }
-}
 .intros {
-  height: 576px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
+  min-height: 40vh
 }
 .intro {
-  font-size: 180px;
-}
-canvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: -1;
-  pointer-events: none;
+  font-size: 8vw;
+  line-height: inherit;
 }
 
-/* Page Loader */
-.js .loading::before,
-.js .loading::after {
-  content: "";
-  position: fixed;
-  z-index: 1000;
-}
+.main {
+  margin-top: 20vh;
+  position: relative;
+  padding-left: 24px;
 
-.js .loading::before {
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: var(--color-bg);
+  &:after {
+    position: absolute;
+    content: "";
+    width: 4px;
+    left: 0;
+    bottom: 0;
+    height: 0%;
+    background: black;
+    transition: height 0.5s;
+  }
+  &.border:after {
+    width: 4px;
+    position: absolute;
+    content: "";
+    left: 0;
+    bottom: 0;
+    height: 100%;
+    background: black;
+    transition: height 0.5s;
+  }
 }
-
-.js .loading::after {
-  top: 50%;
-  left: 50%;
-  width: 60px;
-  height: 60px;
-  margin: -30px 0 0 -30px;
-  border-radius: 50%;
-  opacity: 0.4;
-  background: var(--color-link);
-  animation: loaderAnim 0.7s linear infinite alternate forwards;
-}
-
 @keyframes loaderAnim {
   to {
     opacity: 1;
@@ -132,7 +101,4 @@ canvas {
   opacity: 0;
 }
 
-.me {
-  width: 450px;
-}
 </style>
