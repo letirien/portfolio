@@ -2,9 +2,11 @@
   <div>
     <div id="canvas"/>
     <div class="invisibleDiv" ref="invisible" @mouseover="(this.scaleDown = false)" ></div>
-    <div class="normalWrap" >
-      <h1 ref="underline" class="title">Projects</h1>
-      <a href="#" class="link">A props de moi</a>
+    <div class="normalWrap">
+      <div class="headnav flex">
+        <h1 ref="underline" class="title">Projects</h1>
+        <router-link to="/about" class="link" @click="callUnderline($event)">A props de moi</router-link>
+      </div>
     </div>
     <Transition>
     <div class="top-24 parent_card_grid " ref="parent" v-show="!this.load">
@@ -362,9 +364,11 @@ export default {
       }
 
     },
-    callUnderline() {
-      let line = this.$refs.underline;
+    callUnderline(el) {
+      let line
+      el ? line = el.target : line = this.$refs.underline
 
+      console.log(el)
       function underline() {
         line.classList.add("underline");
       }
@@ -376,6 +380,14 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.headnav{
+  align-items: baseline;
+  justify-content: space-between;
+
+  & > .link{
+    padding-bottom: 8px;
+  }
+}
 /* we will explain what these classes do next! */
 .v-enter-active,
 .v-leave-active {
