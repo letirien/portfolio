@@ -4,6 +4,7 @@
     <div class="invisibleDiv" ref="invisible" @mouseover="(this.scaleDown = false)" ></div>
     <div class="normalWrap" >
       <h1 ref="underline" class="title">Projects</h1>
+      <a href="#" class="link">A props de moi</a>
     </div>
     <Transition>
     <div class="top-24 parent_card_grid " ref="parent" v-show="!this.load">
@@ -520,6 +521,8 @@ export default {
   .project_link {
     cursor: pointer;
     margin-right: 32px;
+    position: relative;
+
   }
 }
 
