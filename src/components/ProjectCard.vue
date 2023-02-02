@@ -1,5 +1,5 @@
 <template>
-<div class="card" :class="focus === content.Name ? '': focus === '' ? '': 'small'">
+<div class="card" :class="focus === content.Name ? '': focus === '' ? '': 'small'" v-show="isLoaded">
     <div class="cardHead flex justify-between">
       <h2>{{content.Name}}</h2>
       <div class="tags">
@@ -8,7 +8,7 @@
     </div>
     <div class="cardBody">
       <div class="container-img">
-        <img :src="content.Image[0].url" alt="">
+        <img :src="content.Image[0].url" alt="" @load="this.isLoaded = true">
       </div>
       <p :style="focus === content.Name? '': focus ===''? 'opacity: 1': 'opacity: 0'">
         {{ content.description }}
@@ -32,6 +32,11 @@ export default {
     content: {},
     focus: String,
 
+  },
+  data(){
+    return{
+      isLoaded : false,
+    }
   },
   computed:{
     isMobile(){

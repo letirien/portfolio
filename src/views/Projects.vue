@@ -1,19 +1,24 @@
 <template>
   <div>
-    <div class="normalWrap">
+    <div id="canvas"/>
+    <div class="invisibleDiv" ref="invisible" @mouseover="(this.scaleDown = false)" ></div>
+    <div class="normalWrap" >
       <h1 ref="underline" class="title">Projects</h1>
     </div>
-    <div class="top-24 parent_card_grid">
-      <div class="card_grid">
+    <Transition>
+    <div class="top-24 parent_card_grid " ref="parent" v-show="!this.load">
+      <div class="card_grid" >
         {{ focus }}
         <ProjectCard :id="project.Name" class="kid" :focus='!isMobile? firstEl: ""' :key="index"
                      v-for="(project, index) in projects" :content="project"/>
       </div>
     </div>
-    <div class="normalWrap foot">
+    </Transition>
+   <Transition>
+    <div class="normalWrap foot" v-show="!this.load"  @mouseover="(this.scaleDown = true)">
       <div class="nav_projects" v-show="!isMobile">
         <p @click="scroll($event)" class="h2 project_link" :id="'link'+project.Name" :class="project.Name==='Jiboiana'?'underline': ''"
-           v-for="(project, index) in clone ">{{ project.Name }}</p>
+           v-for="(project, index) in clone " >{{ project.Name }}</p>
       </div>
       <div class="arrowParent" v-show="!isMobile">
         <div class="stickmanWalking" v-if="this.slide"
@@ -36,6 +41,7 @@
 
       </div>
     </div>
+   </Transition>
     <svg class="slideHand" width="60" height="60" viewBox="0 0 437 306" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect x="203" y="43" width="13" height="151" fill="black"/>
       <rect x="241" y="42" width="13" height="151" fill="black"/>
@@ -67,12 +73,16 @@
 <script>
 import {ref} from "vue";
 import ProjectCard from "../components/ProjectCard.vue";
+import * as THREE from 'three'
+import openSimplexNoise from 'https://cdn.skypack.dev/open-simplex-noise';
+import {gsap} from 'gsap'
+
 
 export default {
   name: "Projects",
   components: {ProjectCard},
   setup() {
-    // make users variable reactive with the ref() function
+    // make users letiable reactive with the ref() function
     const projects = ref([]);
     const clone = ref([])
     const firstEl = ref('');
@@ -81,6 +91,9 @@ export default {
     let current = ref(0)
     let old = ref(null)
     const slide = ref(false);
+    let scaleDown = ref(false);
+    let load = ref(true)
+
 
     fetch("https://api.airtable.com/v0/appTE72qZSTNVsNrL/projects?maxRecords=100&view=Grid%20view", {
       headers: {
@@ -95,6 +108,7 @@ export default {
           data.records.map(e => {
             projects.value.push(e.fields)
             clone.value.push(e.fields)
+            load.value = false
 
           })
         })
@@ -108,12 +122,42 @@ export default {
       old,
       slide,
       clickCount,
+      scaleDown,
+      load
     }
   },
   computed: {
+
     isMobile() {
       return window.matchMedia('only screen and (max-width: 768px)').matches;
-    }
+    },
+    sphereDeclare(){
+      let sphereGeometry = new THREE.SphereGeometry(1.5, 100, 100);
+      sphereGeometry.positionData = [];
+      let v3 = new THREE.Vector3();
+      for (let i = 0; i < sphereGeometry.attributes.position.count; i++){
+        v3.fromBufferAttribute(sphereGeometry.attributes.position, i);
+        sphereGeometry.positionData.push(v3.clone());
+      }
+      let sphereMesh = new THREE.MeshStandardMaterial({color: '#f7c548', roughness: 0.2, metalness: 0.3})
+      let sphere = new THREE.Mesh(sphereGeometry, sphereMesh);
+      const three =  {
+        sphere: sphere,
+        geometry : sphereGeometry,
+        mesh : sphereMesh,
+        v3: v3
+      }
+      return three
+      }
+  },
+  watch: {
+    scaleDown(newValue) {
+      if (newValue) {
+        gsap.to(this.sphereDeclare.sphere.scale, {duration: 0.2, ease: "expo.out", x: 0.15, y: 0.15, z: 0.15});
+      } else {
+        gsap.to(this.sphereDeclare.sphere.scale, {duration: 0.5, ease: "expo.out", x: 1, y: 1, z: 1});
+      }
+    },
   },
   mounted() {
     this.callUnderline();
@@ -124,12 +168,140 @@ export default {
     window.addEventListener('resize', () => {
       parentGrid.style.marginLeft = (wrap.offsetLeft + padding)  + 'px'
     });
+    this.THREE()
   },
   created() {
     const container = window.document.querySelector('.container')
     container.classList.contains("wrap") ? container.classList.remove('wrap'): ''
   },
   methods: {
+    THREE() {
+      const raycaster = new THREE.Raycaster();
+      const container = document.getElementById('canvas');
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color('#eeebd3');
+      const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 50);
+      camera.position.z = 15;
+
+      const renderer = new THREE.WebGLRenderer({antialias: true});
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      container.appendChild(renderer.domElement);
+
+      const lights = [];
+      lights[0] = new THREE.PointLight(0xffffff, 1, 0);
+      lights[1] = new THREE.PointLight(0xffffff, 1, 0);
+      lights[2] = new THREE.PointLight(0xffffff, 1, 0);
+
+      lights[0].position.set(0, 200, 0);
+      lights[1].position.set(100, 200, 100);
+      lights[2].position.set(-100, -200, -100);
+
+      scene.add(lights[0]);
+      scene.add(lights[1]);
+      scene.add(lights[2]);
+
+
+      let sphere = this.sphereDeclare.sphere
+      let sphereGeometry = this.sphereDeclare.geometry
+      let v3 = this.sphereDeclare.v3
+      //ici récup this.sphere from computed
+      scene.add(sphere);
+      const clonePos = sphere.position.clone(sphere)
+      //sphere.rotation.x = +45
+
+      const Plane2d = new THREE.Mesh(new THREE.PlaneGeometry(30, 30), new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide, transparent: true, opacity: 0 }));
+      Plane2d.position.z = 0;
+      scene.add(Plane2d);
+
+      // Variables for tracking mouse position
+      const mouse = new THREE.Vector2();
+      let mouseIsOutside = false;
+        function onMouseMove(event) {
+          mouseIsOutside = false;
+          // delay time in milliseconds
+          const delay = 100;
+          // timer to store time when mouse was moved
+          let timer = null;
+          raycaster.setFromCamera(mouse, camera);
+          const intersects = raycaster.intersectObjects([Plane2d]);
+          const item = intersects[0];
+            // Using JavaScript
+              mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+              mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+              if (intersects.length > 0) {
+                if (timer) {
+                  clearTimeout(timer);
+                }
+                timer = setTimeout(() => {
+                  let targetX = item.point.x;
+                  let targetY = item.point.y;
+                  let targetZ = item.point.z;
+                    sphere.position.x += (targetX - sphere.position.x) ;
+                    sphere.position.y += (targetY - sphere.position.y) ;
+                    sphere.position.z += (targetZ - sphere.position.z) ;
+
+                }, delay);
+              }
+        }
+
+      document.addEventListener("mouseleave", () => {
+        mouseIsOutside = true;
+      });
+
+      function update() {
+        if (mouseIsOutside) {
+          sphere.position.copy(clonePos);
+        }
+      }
+
+      if(!this.isMobile){
+        document.addEventListener('mousemove', onMouseMove, false);
+      }
+
+      let planeGeometry = new THREE.BoxGeometry(7, 7, 2, 10, 10, 2)
+        planeGeometry.translate(0, 0, -3);
+        planeGeometry.positionData = [];
+        for (let i = 0; i < planeGeometry.attributes.position.count; i++){
+          v3.fromBufferAttribute(planeGeometry.attributes.position, i);
+          planeGeometry.positionData.push(v3.clone());
+        }
+
+        let noise = openSimplexNoise.makeNoise4D(Date.now());
+        let clock = new THREE.Clock();
+
+        window.addEventListener("resize", () => {
+          camera.aspect = innerWidth / innerHeight;
+          camera.updateProjectionMatrix();
+          renderer.setSize(innerWidth, innerHeight)
+        });
+
+        renderer.setAnimationLoop( () => {
+          let t = clock.getElapsedTime() / 1.;
+          sphereGeometry.positionData.forEach((p, idx) => {
+            let setNoise = noise(p.x, p.y, p.z, t * 1.05);
+            v3.copy(p).addScaledVector(p, setNoise);
+            sphereGeometry.attributes.position.setXYZ(idx, v3.x, v3.y, v3.z);
+          })
+          sphereGeometry.computeVertexNormals();
+          sphereGeometry.attributes.position.needsUpdate = true;
+
+          planeGeometry.positionData.forEach((p, idx) => {
+            let setNoise = noise(p.x, p.y, p.z, t / 3);
+            v3.copy(p).addScaledVector(p, setNoise);
+            planeGeometry.attributes.position.setXYZ(idx, v3.x, v3.y, v3.z);
+          })
+          planeGeometry.attributes.position.needsUpdate = true;
+          renderer.render(scene, camera);
+        })
+
+      function render() {
+        update()
+        requestAnimationFrame(render);
+        renderer.render(scene, camera);
+      }
+      render();
+    },
     walk() {
       this.slide = true
     },
@@ -156,7 +328,7 @@ export default {
       this.current ? this.clickCount = this.current: ''
         if (direction === 'right') {
           if (this.clickCount < this.projects.length -1) {
-            this.clickCount += 1
+            this.clickCount = this.current + 1
           }
         } else {
           if (this.clickCount > 0) {
@@ -203,6 +375,23 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+/* we will explain what these classes do next! */
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.7s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+.invisibleDiv{
+  position :absolute; top: 0; left: 0; right: 0; bottom: 250px;
+}
+#canvas{
+  position: absolute;
+  inset: 0;
+}
 @media (max-width: 768px) {
   .slideHand{
     display: block!important;
