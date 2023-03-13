@@ -5,7 +5,7 @@
     <div class="normalWrap">
       <div class="headnav flex">
         <h1 ref="underline" class="title">Projects</h1>
-        <router-link to="/about" class="link" @click="callUnderline($event)">A props de moi</router-link>
+        <router-link to="/about" class="link" @click="callUnderline($event)" @mouseover="(this.scaleDown = true)">A propos de moi</router-link>
       </div>
     </div>
     <Transition>
@@ -179,7 +179,7 @@ export default {
   },
   methods: {
     THREE() {
-      const raycaster = new THREE.Raycaster();
+      //const raycaster = new THREE.Raycaster();
       const container = document.getElementById('canvas');
       const scene = new THREE.Scene();
       scene.background = new THREE.Color('#eeebd3');
@@ -213,11 +213,11 @@ export default {
       const clonePos = sphere.position.clone(sphere)
       //sphere.rotation.x = +45
 
-      const Plane2d = new THREE.Mesh(new THREE.PlaneGeometry(30, 30), new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide, transparent: true, opacity: 0 }));
+      /*const Plane2d = new THREE.Mesh(new THREE.PlaneGeometry(30, 30), new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide, transparent: true, opacity: 0 }));
       Plane2d.position.z = 0;
-      scene.add(Plane2d);
+      scene.add(Plane2d);*/
 
-      // Variables for tracking mouse position
+      /*// Variables for tracking mouse position
       const mouse = new THREE.Vector2();
       let mouseIsOutside = false;
         function onMouseMove(event) {
@@ -247,8 +247,8 @@ export default {
                 }, delay);
               }
         }
-
-      document.addEventListener("mouseleave", () => {
+*/
+/*      document.addEventListener("mouseleave", () => {
         mouseIsOutside = true;
       });
 
@@ -261,6 +261,7 @@ export default {
       if(!this.isMobile){
         document.addEventListener('mousemove', onMouseMove, false);
       }
+      */
 
       let planeGeometry = new THREE.BoxGeometry(7, 7, 2, 10, 10, 2)
         planeGeometry.translate(0, 0, -3);
@@ -299,7 +300,7 @@ export default {
         })
 
       function render() {
-        update()
+        //update()
         requestAnimationFrame(render);
         renderer.render(scene, camera);
       }
@@ -367,8 +368,6 @@ export default {
     callUnderline(el) {
       let line
       el ? line = el.target : line = this.$refs.underline
-
-      console.log(el)
       function underline() {
         line.classList.add("underline");
       }
@@ -409,7 +408,9 @@ export default {
   .slideHand{
     display: block!important;
     position: absolute;
-    right: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    //right: 24px;
     top: 24px;
   }
   .foot {
