@@ -28,7 +28,7 @@ export default {
     this.$nextTick(() => {
       this.borderEffect();
       setTimeout(() => {
-        this.$router.push({ path: "/projects", replace: true });
+       this.$router.push({ path: "/projects", replace: true });
       }, 2000);
     });
   },
@@ -57,7 +57,7 @@ export default {
 }
 .intro {
   font-size: 8vw;
-  line-height: inherit;
+  line-height: 1
 }
 
 .main {

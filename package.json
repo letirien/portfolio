@@ -11,6 +11,7 @@
   "dependencies": {
     "airtable": "^0.11.4",
     "gsap": "^3.11.4",
+    "locomotive-scroll": "^4.1.4",
     "open-simplex-noise": "^2.5.0",
     "sass": "^1.54.8",
     "three": "^0.133.1",

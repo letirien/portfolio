@@ -2,6 +2,7 @@ h1, h2, h3, .cta , .project_link, .intro{
   font-family: "Libre Baskerville", serif;
 }
 body{
+  scroll-behavior: smooth;
   padding-top: 24px;
   background: #eeebd3;
   min-height: 100vh;
@@ -54,7 +55,7 @@ p{
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 24px;
-  overflow-x: hidden;
+ // overflow-x: hidden;
 }
 .title,
 .link,
