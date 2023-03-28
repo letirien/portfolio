@@ -7,6 +7,49 @@ body{
   background: #eeebd3;
   min-height: 100vh;
   position: relative;
+  animation: bgLighter 0.3s;
+
+  &.darker{
+    animation: bgDarker 0.3s;
+    background: #5E5D54;
+
+  }
+  /* Standard syntax */
+  @keyframes bgDarker {
+    0% {
+      background: #eeebd3;
+    }
+    25% {
+      background: #EBE8D1;
+    }
+    50% {
+      background: #DEDBC5;
+    }
+    75% {
+      background: #C4C2AF;
+    }
+    100% {
+      background: #5E5D54;
+    }
+  }
+
+  @keyframes bgLighter {
+    0% {
+      background: #5E5D54;
+    }
+    25% {
+      background: #C4C2AF;
+    }
+    50% {
+      background: #DEDBC5;
+    }
+    75% {
+      background: #EBE8D1;
+    }
+    100% {
+      background: #eeebd3;
+    }
+  }
 }
 
 p, .tags{
@@ -48,7 +91,7 @@ p{
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 24px;
-  overflow-x: hidden;
+  //overflow-x: hidden;
   min-height: 100vh;
 }
 .normalWrap{

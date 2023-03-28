@@ -13,7 +13,7 @@
       <div class="card_grid" >
         {{ focus }}
         <ProjectCard :id="project.Name" class="kid" :focus='!isMobile? firstEl: ""' :key="index"
-                     v-for="(project, index) in projects" :content="project"/>
+                     v-for="(project, index) in projects" :content="project" @mouseover="(this.scaleDown = false)"/>
       </div>
     </div>
     </Transition>
