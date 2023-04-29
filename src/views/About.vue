@@ -1,5 +1,5 @@
 <template>
-<div>
+<div id="scroll-container">
   <div class="info">Page en cours de construction <p>RESPONSIVE NOT READY</p></div>
   <header ref="head">
     <div class="normalWrap">
@@ -8,14 +8,12 @@
         <!-- <router-link to="/about" class="link" @click="callUnderline($event)" @mouseover="(this.scaleDown = true)">A propos de moi</router-link> -->
       </div>
       <div class="head-content">
-          <h1 class="intro">Titien SCHOTT</h1>
+          <h1 class="intro">Titien<br> SCHOTT</h1>
           <h2 class="intro">Développeur Web</h2>
           <p>From Strasbourg</p>
 
       </div>
-      <div class="head-img">
-      <RevealImg :image-src="getImageUrl(pageImage.header)" type="head"/>
-      </div>
+      <div id="canvas" class="head-img"/>
     </div>
   </header>
   <main class="normalWrap">
@@ -65,6 +63,10 @@
 
 <script>
 import RevealImg from '../components/RevealImg.vue';
+import * as THREE from 'three'
+import openSimplexNoise from 'https://cdn.skypack.dev/open-simplex-noise';
+import {gsap} from 'gsap'
+
 export default {
     name: "About",
     data(){
@@ -72,48 +74,160 @@ export default {
       pageImage: {
         header: 'Stras.jpg',
         me: 'me.jpg'
-      }
+      },
+      scaleDown : false
     };
     },
     components: [RevealImg],
+    computed:{
+      sphereDeclare(){
+      let sphereGeometry = new THREE.SphereGeometry(1.5, 100, 100);
+      sphereGeometry.positionData = [];
+      let v3 = new THREE.Vector3();
+      for (let i = 0; i < sphereGeometry.attributes.position.count; i++){
+        v3.fromBufferAttribute(sphereGeometry.attributes.position, i);
+        sphereGeometry.positionData.push(v3.clone());
+      }
+      let sphereMesh = new THREE.MeshStandardMaterial({color: '#f7c548', roughness: 0.2, metalness: 0.3})
+      let sphere = new THREE.Mesh(sphereGeometry, sphereMesh);
+      const three =  {
+        sphere: sphere,
+        geometry : sphereGeometry,
+        mesh : sphereMesh,
+        v3: v3
+      }
+      return three
+      }
+  },
     mounted() {
         this.callUnderline();
         this.borderEffect();
-            // Set up Intersection Observer to reveal subsequent images on scroll
-    const options = {
-      threshold: 0,
-    };
+        this.obserserver()
+        this.THREE()
 
-    const observer = new IntersectionObserver((entries, observer) => {
-      entries.forEach((entry) => {
-          const H2 = entry.target.querySelector('.text').firstChild
-          const p = entry.target.querySelector('.text').children[1]
-          const img = entry.target.querySelector('.me-img')
-        if (entries[0].intersectionRatio !== 0) {
-          document.querySelector('body').classList.add('darker')
-          setTimeout(()=>{
-            document.querySelector('body').classList.add('darker')
-            img.classList.add('shadow')
-            H2.classList.add('appear')
-            p.classList.add('appear')
-          }, 800)
- 
-        } else {
-          if (document.querySelector('body').classList.contains('darker')) {
-            document.querySelector('body').classList.remove('darker')
-          }
-        }
-      })
-    })
-    const myEl = document.querySelector('.about-me-sec');
-
-    observer.observe(myEl);
-  
     },
     methods: {
-      getImageUrl(el){
-      return new URL(`../assets/${el}`, import.meta.url).href
+      THREE() {
+      //const raycaster = new THREE.Raycaster();
+      const container = document.getElementById('canvas');
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(45, container.offsetWidth / container.offsetHeight, 0.1, 50);
+      camera.position.z = 15;
+
+      const renderer = new THREE.WebGLRenderer({alpha: true});
+      renderer.setPixelRatio(window.devicePixelRatio);
+      renderer.setSize(container.offsetWidth, container.offsetHeight);
+      container.appendChild(renderer.domElement);
+
+      const lights = [];
+      lights[0] = new THREE.PointLight(0xffffff, 1, 0);
+      lights[1] = new THREE.PointLight(0xffffff, 1, 0);
+      lights[2] = new THREE.PointLight(0xffffff, 1, 0);
+
+      lights[0].position.set(0, 200, 0);
+      lights[1].position.set(100, 200, 100);
+      lights[2].position.set(-100, -200, -100);
+
+      scene.add(lights[0]);
+      scene.add(lights[1]);
+      scene.add(lights[2]);
+
+
+      let sphere = this.sphereDeclare.sphere
+      let sphereGeometry = this.sphereDeclare.geometry
+      let v3 = this.sphereDeclare.v3
+      //ici récup this.sphere from computed
+      scene.add(sphere);
+      const clonePos = sphere.position.clone(sphere)
+      //sphere.rotation.x = +45
+
+      let planeGeometry = new THREE.BoxGeometry(7, 7, 2, 10, 10, 2)
+        planeGeometry.translate(0, 0, -3);
+        planeGeometry.positionData = [];
+        for (let i = 0; i < planeGeometry.attributes.position.count; i++){
+          v3.fromBufferAttribute(planeGeometry.attributes.position, i);
+          planeGeometry.positionData.push(v3.clone());
+        }
+
+        let noise = openSimplexNoise.makeNoise4D(Date.now());
+        let clock = new THREE.Clock();
+
+        window.addEventListener("resize", () => {
+          camera.aspect = innerWidth / innerHeight;
+          camera.updateProjectionMatrix();
+          renderer.setSize(innerWidth, innerHeight)
+        });
+
+        renderer.setAnimationLoop( () => {
+          let t = clock.getElapsedTime() / 1.;
+          sphereGeometry.positionData.forEach((p, idx) => {
+            let setNoise = noise(p.x, p.y, p.z, t * 1.05);
+            v3.copy(p).addScaledVector(p, setNoise);
+            sphereGeometry.attributes.position.setXYZ(idx, v3.x, v3.y, v3.z);
+          })
+          sphereGeometry.computeVertexNormals();
+          sphereGeometry.attributes.position.needsUpdate = true;
+
+          planeGeometry.positionData.forEach((p, idx) => {
+            let setNoise = noise(p.x, p.y, p.z, t / 3);
+            v3.copy(p).addScaledVector(p, setNoise);
+            planeGeometry.attributes.position.setXYZ(idx, v3.x, v3.y, v3.z);
+          })
+          planeGeometry.attributes.position.needsUpdate = true;
+          renderer.render(scene, camera);
+        })
+
+      function render() {
+        //update()
+        requestAnimationFrame(render);
+        renderer.render(scene, camera);
+      }
+      render();
     },
+      obserserver(){
+        function debounce(func, wait) {
+          let timeout;
+          return function() {
+            const context = this, args = arguments;
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+              timeout = null;
+              func.apply(context, args);
+            }, wait);
+          };
+        }
+            // Set up Intersection Observer to reveal subsequent images on scroll
+        const options = {
+          // rootMargin: "200px",
+          threshold: 0.1,
+        } ;
+        const observer = new IntersectionObserver(debounce((entries, observer) => {
+          entries.forEach((entry) => {
+              const H2 = entry.target.querySelector('.text').firstChild
+              const p = entry.target.querySelector('.text').children[1]
+              const img = entry.target.querySelector('.me-img')
+            if (entries[0].intersectionRatio !== 0) {
+              document.querySelector('body').classList.add('darker')
+              setTimeout(()=>{
+                document.querySelector('body').classList.add('darker')
+                img.classList.add('shadow')
+                H2.classList.add('appear')
+                p.classList.add('appear')
+              }, 800)
+    
+            } else {
+              if (document.querySelector('body').classList.contains('darker')) {
+                document.querySelector('body').classList.remove('darker')
+              }
+            }
+          })
+        },0))
+        const myEl = document.querySelector('.about-me-sec');
+        observer.observe(myEl, options);
+      },
+      getImageUrl(el){
+        return new URL(`../assets/${el}`, import.meta.url).href
+      },
         callUnderline(el) {
             let line;
             el ? line = el.target : line = this.$refs.underline;
@@ -134,21 +248,24 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
+.head-img canvas{
+  width: 100%!important;
+}
 @media (max-width: 1024px) {
 header{
   height: 50vh!important;
 }
 }
-
 .head-img{
   position: absolute;
-  width: 30%;
-  right: 10%;
+  width: 50%;
+  right: -10%;
   top: 24px;
   bottom: 0;
+  z-index: -5;
 }
 .about-me-sec{
+  margin-top: 80px;
   position: relative;
   width: 100%;
   height: 800px;
@@ -283,6 +400,10 @@ section{
   }
 header{
   height: calc(100vh - 24px);
+  // background: #eeebd3;
+  .normalWrap{
+    position: relative;
+  }
 }
 
 </style>

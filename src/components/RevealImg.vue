@@ -34,6 +34,7 @@
 
             // Set up Intersection Observer to reveal subsequent images on scroll
             const options = {
+            // rootMargin: "200px",
             threshold: 0,
             };
 
@@ -48,7 +49,7 @@
             });
             }, options);
 
-            observer.observe(this.$el);
+            observer.observe(this.$el, options);
         },
         methods:{
         },
@@ -60,6 +61,8 @@
     position: relative; 
     z-index: -1;
     overflow: hidden;
+    width: 100%;
+    height: 100%;
 
     img{
         transition: transform 0.5s;

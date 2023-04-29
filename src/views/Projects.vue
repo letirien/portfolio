@@ -20,7 +20,7 @@
    <Transition>
     <div class="normalWrap foot" v-show="!this.load"  @mouseover="(this.scaleDown = true)">
       <div class="nav_projects" v-show="!isMobile">
-        <p @click="scroll($event)" class="h2 project_link" :id="'link'+project.Name" :class="project.Name==='Jiboiana'?'underline': ''"
+        <p @click="scroll($event)" class="h2 project_link" :id="'link'+project.Name" :class="project.Name=== projects[0].Name ?'underline': ''"
            v-for="(project, index) in clone " >{{ project.Name }}</p>
       </div>
       <div class="arrowParent" v-show="!isMobile">
@@ -95,7 +95,8 @@ export default {
     let old = ref(null)
     const slide = ref(false);
     let scaleDown = ref(false);
-    let load = ref(true)
+    let load = ref(true);
+    let dispose = ref(false);
 
 
     fetch("https://api.airtable.com/v0/appTE72qZSTNVsNrL/projects?maxRecords=100&view=Grid%20view", {
@@ -126,7 +127,8 @@ export default {
       slide,
       clickCount,
       scaleDown,
-      load
+      load,
+      dispose
     }
   },
   computed: {
@@ -304,7 +306,7 @@ export default {
         requestAnimationFrame(render);
         renderer.render(scene, camera);
       }
-      render();
+        render();
     },
     walk() {
       this.slide = true
@@ -376,6 +378,12 @@ export default {
     },
 
   },
+  beforeDestroy() {
+    // Retirer l'élément canvas du DOM
+    // this.$canvasContainer.removeChild();
+    // Détruire l'instance Renderer et l'instance Scene
+    // this.dispose = true
+  }
 };
 </script>
 <style lang="scss" scoped>

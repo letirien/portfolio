@@ -9,6 +9,7 @@
 </template>
 <script>
 export default {};
+console.log('! Message au devs, il faut encore que je destroy correctement mes composants et ses instances de three car c nul niveau performance')
 </script>
 <style lang="scss">
 @import "src/assets/styles/styles.scss";
