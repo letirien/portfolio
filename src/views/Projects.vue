@@ -102,7 +102,7 @@ export default {
     fetch("https://api.airtable.com/v0/appTE72qZSTNVsNrL/projects?maxRecords=100&view=Grid%20view", {
       headers: {
         'Content-type': 'application/json',
-        'Authorization': `Bearer key9a1KxVxfytXi0P`, // notice the Bearer before your token
+        'Authorization': `Bearer patUXfBswEgCvDmCq.4fce3ebbc19266564d1d46536a0be8602203cbaa6120cb421c16ab346810e01d`, // notice the Bearer before your token
       },
 
     })
