@@ -5,7 +5,6 @@
     <div class="normalWrap">
       <div class="headnav flex">
         <h1 ref="underline" class="title">Projects</h1>
-        <router-link to="/about" class="link" @click="callUnderline($event)" @mouseover="(this.scaleDown = true)">A propos de moi</router-link>
       </div>
     </div>
     <Transition>
