@@ -76,7 +76,7 @@
 import {ref} from "vue";
 import ProjectCard from "../components/ProjectCard.vue";
 import * as THREE from 'three'
-import openSimplexNoise from 'https://cdn.skypack.dev/open-simplex-noise';
+import * as openSimplexNoise from 'https://esm.sh/open-simplex-noise';
 import {gsap} from 'gsap'
 
 
